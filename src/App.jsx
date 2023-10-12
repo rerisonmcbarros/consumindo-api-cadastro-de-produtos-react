@@ -1,16 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import Login from './pages/Login';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import useAuthContext from './hooks/useAuthContext';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {isLoged} = useAuthContext();
 
   return (
     <>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={ isLoged() ?  <Navigate to="/home" /> : <Login /> } />
+        <Route path="/home" element={ isLoged() ? <Home /> : <Navigate to="/" /> } />
+      </Routes>
+    </BrowserRouter>
     </>
   )
 }
