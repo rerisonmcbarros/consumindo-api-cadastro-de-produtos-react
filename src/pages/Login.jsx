@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import Label from "../components/Label";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
 import useAuthContext from "../hooks/useAuthContext";
-import Message from "../components/Message";
+import FormErrorMessage from "../components/FormErrorMessage";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -44,9 +43,9 @@ const Login = () => {
           <Logo className="hidden sm:inline-block"/>
           <h1 className="inline-block font-extrabold">Login</h1>
         </div>
-        {errorMessage && <Message className="text-red-600 text-sm">{errorMessage}</Message>}
+        {errorMessage && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
         <form className="mb-10" onSubmit={(e) => handleSubmit(e)}>
-          <Label name="Email">
+          <Label className="mb-8" name="Email">
             <Input 
               className="border-b p-2"
               type="email" name="email" placeholder="Digite seu Email"  
@@ -54,7 +53,7 @@ const Login = () => {
               onChange={(e) => handleEmail(e.target.value)} 
             />
           </Label>
-          <Label name="Senha">
+          <Label className="mb-8" name="Senha">
             <Input
               className="border-b p-2" 
               type="password" name="password" placeholder="Digite sua senha"

@@ -7,14 +7,19 @@ export const AuthContextProvider = ({children}) => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
-    const {data, httpConfig, baseURL, error: httpError, loading} = useFetch();
+    const {get, create, loading} = useFetch();
 
     const isLoged = () => {
         return localStorage.getItem("user") ? true : false;
     }
 
     const signOut = async () => {
-        httpConfig("/logout", "GET", null, token);
+        let response = await get("/logout", token);
+
+        if (!response.ok) {
+            console.log(await response.json());
+            return;
+        }
 
         localStorage.removeItem("user");
         localStorage.removeItem("token");
@@ -22,28 +27,25 @@ export const AuthContextProvider = ({children}) => {
         setToken(null);
     }
     
-    const signIn = (email, password) => {
-        httpConfig(
-            "/sign-in", 
-            "POST",
-            {email, password} 
-        );
+    const signIn = async (email, password) => {
+        let response = await create("/sign-in", {email, password});
+
+        if (!response.ok) {
+            console.log(response);
+            response = await response.json();
+            console.log(response);
+            setError(response);
+            return;
+        }
+
+        response = await response.json();
+
+        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
+        setUser(response.user);
+        setToken(response.token);
+        setError(null);
     }
-
-    useEffect(() => {
-        if (data) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('token', data.token);
-            setUser(data.user);
-            setToken(data.token);
-        }
-    }, [data]);
-
-    useEffect(() => {
-        if (httpError) {
-            setError(httpError.data);
-        }
-    }, [httpError]);
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem("user")));

@@ -1,10 +1,10 @@
-const Label = ({children, name}) => {
+const Label = (props) => {
   return (
     <>  
-       <label className="flex flex-col mb-8">
-            <span className="font-normal text-neutral-700">{name}</span>
-            {children}
-        </label>
+      <label {...props} className={`flex flex-col ${props.className ? props.className : ''}`}>
+        <span className="font-normal text-neutral-700">{props.name}</span>
+        {props.children}
+      </label>
     </>
   )
 }
